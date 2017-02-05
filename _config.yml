@@ -3,37 +3,37 @@
 # # # # # # # # # # # # #
 
 # Basic
-name:               "Kiko Plus"
+name:               "Jakub Gruszecki"
 
 author:
-  facebook:         your-id
-  twitter:          your-id
-  github:           your-id
-  linkedin:         your-id
-  medium:           your-id
-  tumblr:           your-id
-  email:            your-id@your-email.com
+  facebook:         gruszecki.jakub
+  twitter:          yakubgrushetzki
+  github:           ditrytus
+  linkedin:         jakub-gruszecki-8ab28651
+#  medium:           nil
+#  tumblr:           nil
+  email:            gruszecki.jakub@gmail.com
 
 copyright:
   year:             2017
-  name:             Kiko
+  name:             Jakub Gruszecki
 
 # Google-analytics
 google-analytics:
-  id:               ""
+  id:               "UA-91443655-1"
 
 # Disqus
 disqus:
-  id:               "kiko-plus"
+  id:               "blog-gruszecki-software"
 
 # URL
-url:                "https://AWEEKJ.github.io" # the base hostname & protocol for your site
-# url:                "http://localhost:4000" # use this url when you develop
-baseurl:            "/Kiko-plus" # the subpath of your site, e.g. /blog
+# url:                "http://blog.gruszecki.software" # the base hostname & protocol for your site
+url:                "http://localhost:4000" # use this url when you develop
+baseurl:            "" # the subpath of your site, e.g. /blog
 
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-timezone:           Asia/Seoul
+timezone:           Europe/Warsaw
 permalink:          /:year-:month-:day/:title/
 
 # Pagination
@@ -53,8 +53,6 @@ nav:
     url:            "/archive"
   - name:           "Tags"
     url:            "/tags"
-  - name:           "Github"
-    url:            "https://github.com/AWEEKJ/Kiko-plus"
 
 # Sass
 sass:
