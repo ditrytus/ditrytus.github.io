@@ -2,7 +2,7 @@
 layout: post
 title: "My attempt on Unity with UniRx"
 description: "How I redid the Unity's basic Space Shooter tutorial's scripts with UniRx."
-date: 2017-02-05
+date: 2017-02-14
 tags: [Unity, ReactiveX, UniRx, C#]
 comments: true
 ---
