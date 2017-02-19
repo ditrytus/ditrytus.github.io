@@ -14,7 +14,7 @@ If you are working on a code base with a ticketing system in a larger organizati
 
 To make life easier I come up with a simple [git hook](https://git-scm.com/docs/githooks) that will automatically extract a jira ticket number from current branch name and will prepend it to commit message on every commit:
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/sh
 #
 
