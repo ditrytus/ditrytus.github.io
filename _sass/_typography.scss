@@ -276,9 +276,7 @@ pre {
   font-size: .8rem;
   line-height: 1.4;
   white-space: pre;
-  white-space: pre-wrap;
-  word-break: break-all;
-  // word-wrap: break-word;
+  word-break: keep-all;
   background-color: $code-background-color;
 }
 
@@ -296,6 +294,15 @@ pre code {
 
 .highlight pre {
   margin-bottom: 0;
+}
+
+figure.highlight {
+  margin: 10px 0px;
+  overflow-x: auto;
+  background-color: #f1f3f5;
+  table {
+    margin-bottom: 0px;
+  }
 }
 
 /*--------------
