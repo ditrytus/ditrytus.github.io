@@ -9,11 +9,12 @@ comments: true
 
 ## `Time` class
 
-Unity engine offers a static `Time` class that servers as an engines clock and allows to manipulate a flow of time. Here are some of fields that are exposed by `Time`:
+Unity engine offers a static `Time` class that serves as an engine's clock and allows to manipulate a flow of time. Here are some of the fields that are exposed by `Time`:
 
 | File | Description |
 | --- | --- |
-| `Time.time` | Returns number of seconds since the game started expressed as `float`. |
+| `Time.time` | Returns a number of seconds since the game started, expressed as `float`. |
+| `Time.deltaTime` | Returns a number of seconds since the last frame, expressed as `float`. |
 | `Time.timeScale` | Gets or sets a `float` value that describes how fast the time passes in your game. |
 | `Time.unscaledTime` | Like `Time.time` it returns a number of seconds since the game started however `Time.timeScale` has no effect on it. It will always show real clock seconds. |
 
@@ -26,7 +27,14 @@ So how `Time.timeScale` affects the speed of game clock? Let's look at a few exa
 * Value `2.0f` means that for each second of real time, two seconds will pass in the game.
 * Value `0.5f` means that for every second of real time only half of second will pass in the game.
 
-`Time.timeScale` can have any non-negative value, so in general for every real second `Time.time` will advance for `Time.unscaledTime * Time.timeScale` seconds. Setting values bigger than `1.0f` can be used for effects like "fast forward" while with values smaller than `1.0f` you can use make "bullet time" or other "slow motion" effect.
+`Time.timeScale` can have any non-negative value, so in general for every real second `Time.time` will advance for `Time.unscaledTime * Time.timeScale` seconds. Setting values bigger than `1.0f` can be used for effects like "fast forward" while with values smaller than `1.0f` can be used to make "bullet time" or other "slow motion" effect.
+
+`Time.time` is used as the main clock for many Unity's subsystems. Manipulating it will affect (among others):
+
+* Mecanim animations
+* Physics calculations
+* Particle systems speed
+* Any scripts that directly use `Time.time` or `Time.deltaTime`.
 
 ## Changing `Time.timeScale`
 
@@ -56,7 +64,7 @@ Let's assume the following situation. We start a game with `Time.timeScale == 1.
 | 15.0 | 1.0 | 15.0 | Clock would move backward again! |
 | 20.0 | 1.0 | 20.0 |  |
 
-Note that every time we would set `Time.timeScale` the value of time would either instantly move backward or skip some range forward. That would break the continuos flow of time that we intuitively expect. Luckily that is not the case. The real values are:
+Note that every time we would set `Time.timeScale` the value of time would either instantly move backward or skip some range forward. That would break the continuos flow of time that we intuitively expect. Luckily that is not the case. An actual values calculated by Unity are:
 
 | `Time.unscaledTime `| `Time.timeScale` | `Time.time` | Note |
 | ---- | --- | ---- | --- |
@@ -66,12 +74,12 @@ Note that every time we would set `Time.timeScale` the value of time would eithe
 | 15.0 | 1.0 | 17.5 | Previous 7.5 counted with various speeds + 5.0 * 2.0 |
 | 20.0 | 1.0 | 22.5 | Previous 17.5 seconds with 5.0 more passed with normal speed. |
 
-The calculation of `Time.time` might seem obscure but you don't need to worry about it. Unity keeps track of it for you.
+The calculation of `Time.time` might seem complicated but you don't need to worry about it. Unity keeps track of it for you.
 
 ## Summary
 
 Takeaways from this for you is to remember that:
 
-* `Time.time` never goes backward.
-* `Time.time` never skips a value.
-* `Time.timeScale` controls only how fast `Time.time` increments.
+* You can use `Time.timeScale` to determine how fast the time should flow.
+* `Time.timeScale > 1.0` will speed up time and `Time.timeScale < 1.0` will slow down time.
+* `Time.time` keeps it's continuity and never moves backward or skips forward.
