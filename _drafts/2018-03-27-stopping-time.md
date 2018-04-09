@@ -309,6 +309,10 @@ The above script uses a `Mathf.Sin()` function to oscillate a value between `1.0
 
 You can use the above method of mixing `UnityEngine.Time` and `PausableTime` to create time-dependent scripts that can be paused without having to stop the entire game. You could try to implement your scripts in a way that depending on some public boolean field they will either be pausable or not so that you can easily change that behavior in the editor instead of replacing components on an object.
 
+A working example of the above code can be found on GitHub:
+
+[https://github.com/ditrytus/unity-pause-example](https://github.com/ditrytus/unity-pause-example)
+
 ## Further challenges
 
 Class `PausableTime` only allows us to control a time flow in scripts but we can't use it to selectively stop physics simulation or pause an execution of [Destroy(gameObject, timeout)](https://docs.unity3d.com/ScriptReference/Object.Destroy.html) function. I will address these issues in the further posts.
