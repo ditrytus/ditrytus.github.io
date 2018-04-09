@@ -29,24 +29,24 @@ using UnityEngine;
 
 public class PauseManager
 {
-	public bool IsPaused { get; private set;}
+    public bool IsPaused { get; private set;}
 
-	public PauseManager()
-	{
-		Resume();
-	}
-	
-	public void Pause()	
-	{
-		Time.timeScale = 0.0f;
-		IsPaused = true;
-	}
+    public PauseManager()
+    {
+        Resume();
+    }
+    
+    public void Pause()    
+    {
+        Time.timeScale = 0.0f;
+        IsPaused = true;
+    }
 
-	public void Resume()
-	{
-		Time.timeScale = 1.0f;
-		IsPaused = false;
-	}
+    public void Resume()
+    {
+        Time.timeScale = 1.0f;
+        IsPaused = false;
+    }
 }
 ```
 
@@ -58,31 +58,31 @@ using UnityEngine.UI;
 
 public class PauseButtonHandler : MonoBehaviour {
 
-	private PauseManager pauseManager;
-	private Text uiText;
-	private Button button;
+    private PauseManager pauseManager;
+    private Text uiText;
+    private Button button;
 
-	void Start()
-	{
-		pauseManager = new PauseManager();
-		uiText = GetComponentInChildren<Text>();
-		button = GetComponent<Button>();
-		button.onClick.AddListener(OnClick);
-	}
+    void Start()
+    {
+        pauseManager = new PauseManager();
+        uiText = GetComponentInChildren<Text>();
+        button = GetComponent<Button>();
+        button.onClick.AddListener(OnClick);
+    }
 
-	void OnClick()
-	{
-		if(pauseManager.IsPaused)
-		{
-			pauseManager.Resume();
-			uiText.text = "Pause";
-		}
-		else
-		{
-			pauseManager.Pause();
-			uiText.text = "Resume";
-		}
-	}
+    void OnClick()
+    {
+        if(pauseManager.IsPaused)
+        {
+            pauseManager.Resume();
+            uiText.text = "Pause";
+        }
+        else
+        {
+            pauseManager.Pause();
+            uiText.text = "Resume";
+        }
+    }
 }
 ```
 
@@ -112,80 +112,80 @@ public class PausableTime
 {
     public static PausableTime Instance { get; private set; }
 
-	static PausableTime()
-	{
-		Instance = new PausableTime();
-	}
+    static PausableTime()
+    {
+        Instance = new PausableTime();
+    }
 
-	public bool IsPaused { get; private set; }
+    public bool IsPaused { get; private set; }
 
-	private float pauseTime = 0.0f;
+    private float pauseTime = 0.0f;
 
-	public float gapTime;
+    public float gapTime;
 
-	public float Time
-	{
-		get
-		{
-			float result;
-			if (IsPaused)
-			{
-				result = pauseTime;
-			}
-			else
-			{
-				result =  UnityEngine.Time.time - gapTime;
-			}
-			
-			return result;
-		}
-	}
+    public float Time
+    {
+        get
+        {
+            float result;
+            if (IsPaused)
+            {
+                result = pauseTime;
+            }
+            else
+            {
+                result =  UnityEngine.Time.time - gapTime;
+            }
+            
+            return result;
+        }
+    }
 
-	public float DeltaTime
-	{
-		get
-		{
-			float result;
-			if (IsPaused)
-			{
-				result = 0.0f;
-			}
-			else
-			{
-				result = UnityEngine.Time.deltaTime;
-			}
-			return result;
-		}
-	}
+    public float DeltaTime
+    {
+        get
+        {
+            float result;
+            if (IsPaused)
+            {
+                result = 0.0f;
+            }
+            else
+            {
+                result = UnityEngine.Time.deltaTime;
+            }
+            return result;
+        }
+    }
 
     public PausableTime()
-	{
-		IsPaused = false;
-		gapTime = 0.0f;
-	}
+    {
+        IsPaused = false;
+        gapTime = 0.0f;
+    }
 
     public void Pause()
     {
         if (IsPaused)
-		{
-			return;
-		}
+        {
+            return;
+        }
 
-		pauseTime = Time;
+        pauseTime = Time;
 
-		IsPaused = true;
+        IsPaused = true;
     }
 
     public void Resume()
     {
         if (!IsPaused)
-		{
-			return;
-		}
+        {
+            return;
+        }
 
-		gapTime = UnityEngine.Time.time - pauseTime;
+        gapTime = UnityEngine.Time.time - pauseTime;
 
-		IsPaused = false;
+        IsPaused = false;
     }
 }
 ```
@@ -209,27 +209,27 @@ using UnityEngine.UI;
 
 public class PausableTimeButtonHandler : MonoBehaviour {
 
-	private Text uiText;
+    private Text uiText;
 
-	void Start()
-	{
-		uiText = GetComponentInChildren<Text>();
-		GetComponent<Button>().onClick.AddListener(OnClick);
-	}
+    void Start()
+    {
+        uiText = GetComponentInChildren<Text>();
+        GetComponent<Button>().onClick.AddListener(OnClick);
+    }
 
-	void OnClick()
-	{
-		if(PausableTime.Instance.IsPaused)
-		{
-			PausableTime.Instance.Resume();
-			uiText.text = "Pause";
-		}
-		else
-		{
-			PausableTime.Instance.Pause();
-			uiText.text = "Resume";
-		}
-	}
+    void OnClick()
+    {
+        if(PausableTime.Instance.IsPaused)
+        {
+            PausableTime.Instance.Resume();
+            uiText.text = "Pause";
+        }
+        else
+        {
+            PausableTime.Instance.Pause();
+            uiText.text = "Resume";
+        }
+    }
 }
 ```
 
@@ -245,13 +245,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Spinner : MonoBehaviour {
-	
-	public float speed = 180.0f;
-	
-	void Update () {
-		var delta = Time.deltaTime;
-		transform.Rotate(delta * speed, delta * speed, delta * speed);	
-	}
+    
+    public float speed = 180.0f;
+    
+    void Update () {
+        var delta = Time.deltaTime;
+        transform.Rotate(delta * speed, delta * speed, delta * speed);    
+    }
 }
 ```
 
@@ -263,13 +263,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PausableSpinner : MonoBehaviour {
-	
-	public float speed = 180.0f;
+    
+    public float speed = 180.0f;
 
-	void Update () {
-		var delta = PausableTime.Instance.DeltaTime;
-		transform.Rotate(delta * speed, delta * speed, delta * speed);	
-	}
+    void Update () {
+        var delta = PausableTime.Instance.DeltaTime;
+        transform.Rotate(delta * speed, delta * speed, delta * speed);    
+    }
 }
 ```
 
@@ -284,24 +284,24 @@ using UnityEngine;
 
 public class PausableSwing : MonoBehaviour {
 
-	private float startTime;
-	private float startY;
+    private float startTime;
+    private float startY;
 
-	public float deviation = 1.0f;
-	public float interval = 1.0f;
-	
-	void Start () {
-		startTime = PausableTime.Instance.Time;
-		startY = transform.position.y;
-	}
-	
-	void Update ()
-	{
-		transform.position = new Vector3(
-			transform.position.x,
-			startY + Mathf.Sin(2 * Mathf.PI * (PausableTime.Instance.Time / interval)) * deviation,
-			transform.position.z);
-	}
+    public float deviation = 1.0f;
+    public float interval = 1.0f;
+    
+    void Start () {
+        startTime = PausableTime.Instance.Time;
+        startY = transform.position.y;
+    }
+    
+    void Update ()
+    {
+        transform.position = new Vector3(
+            transform.position.x,
+            startY + Mathf.Sin(2 * Mathf.PI * (PausableTime.Instance.Time / interval)) * deviation,
+            transform.position.z);
+    }
 }
 ```
 
