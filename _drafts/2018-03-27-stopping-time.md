@@ -90,7 +90,7 @@ Additionally, our script will also alter a text label on a Button so that the pl
 
 *NOTE: `PauseButtonHandler` directly instantiates `PauseManager` which is not a good design. `PauseManager` manipulates a `Time.timeScale` which is global to our game so it would be natural to implement it as a singleton or somehow inject a shared instance to a component but I am omitting this aspect for the sake of focusing only on pausing.*
 
-Button with the attached script will effectively pause and resume the entire game. You can implement it differently, for example, to pause a game on a pressing a keyboard key like `P`. The key here is that `PauseManager` class is responsible for managing pause state and manipulating the clock regardless of who will call it's methods.
+Button with the attached script will effectively pause and resume the entire game. You can implement it differently, for example, to pause a game on a pressing a keyboard key like `P`. The key here is that `PauseManager` class is responsible for managing pause state and manipulating the clock regardless of who will call its methods.
 
 ## Stopping time only for some scripts
 
