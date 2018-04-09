@@ -7,22 +7,22 @@ tags: [Unity, C#, gamedev, time, pause]
 comments: true
 ---
 
-Most of video games require an ability to suspend action. There can be number of reasons to do so:
-* we want to give player an access to set of menus like: game options, save, load etc.;
-* game play itself might require opening full screen menus like maps, journals or inventory while allowing player not to worry on what is going on on the main scene;
+Most of video games require an ability to suspend action. There can be a number of reasons to do so:
+* we want to give a player an access to pause menus like game options, save, load etc.;
+* the gameplay itself might require opening full-screen menus like maps, journals or inventory while allowing player not to worry about what is going on on the main scene;
 * or just to give a player an ability to take a rest without sacrificing victory.
 
 ## Simple implementation
 
-In my previous post In my previous post [Manipulating time]({% post_url 2018-03-26-manipulating-time %}) I described how you can use `Time.timeScale` field to manipulate the flow of time. The type of `Time.timeScale` is `float` so by invoking the following instruction in your script:
+In my previous post [Manipulating time]({% post_url 2018-03-26-manipulating-time %}) I described how you can use `Time.timeScale` field to manipulate the flow of time. The type of `Time.timeScale` is `float` so by invoking the following instruction in your script you will stop the clock entirely. 
 
 ```
 Time.timeScale = 0;
 ```
 
-Yes, you guessed it, you will stop the clock entirely. It seems that implementing game pause is extremely simple.
+It seems that implementing game pause is extremely simple.
 
-All we need is an class that will have two states: paused and unpaused and will alternate `timeScale` between `1.0f` and `0.0f` accordingly:
+All we need is a class that will have two states: paused and unpaused and will alternate `timeScale` between `1.0f` and `0.0f` accordingly:
 
 ```
 using UnityEngine;
@@ -50,7 +50,7 @@ public class PauseManager
 }
 ```
 
-Having this simple implementation, we need to add some UI element to for example a button which on click will either invoke `Pause()` or `Resume()` methods. For that purpose we can create a script that can be directly attached to GameObject in the editor:
+Having this simple implementation, we need to add some UI element, for example, a button which on click will either invoke `Pause()` or `Resume()` methods. For that purpose we can create a script that can be directly attached to Button in the editor:
 
 ```
 using UnityEngine;
@@ -86,21 +86,19 @@ public class PauseButtonHandler : MonoBehaviour {
 }
 ```
 
-Additionally our script will also alter a text label on a button so that the player knows what the button will do.
+Additionally, our script will also alter a text label on a Button so that the player knows what action we are invoking.
 
-*NOTE: `PauseButtonHandler` directly instantiates `PauseManager` which is not a good design. `PauseManager` manipulates a `Time.timeScale` which is global to our game so it would be natural to implement `PauseManager` as a singleton or somehow inject a shared instance to a component but I am omitting this aspect for the sake of focusing on pausing itself.*
+*NOTE: `PauseButtonHandler` directly instantiates `PauseManager` which is not a good design. `PauseManager` manipulates a `Time.timeScale` which is global to our game so it would be natural to implement it as a singleton or somehow inject a shared instance to a component but I am omitting this aspect for the sake of focusing only on pausing.*
 
-Button with the attached script will effectively pause and resume the entire game. You can implement it differently for example to pause a game on a pressing a keyboard key like `P`. The key here is a `PauseManager` class that is responsible for managing pause state and manipulating the clock.
-
-You can find a working example of the above code in `Assets/Scenes/pause_simple.unity` scene.
+Button with the attached script will effectively pause and resume the entire game. You can implement it differently, for example, to pause a game on a pressing a keyboard key like `P`. The key here is that `PauseManager` class is responsible for managing pause state and manipulating the clock regardless of who will call it's methods.
 
 ## Stopping time only for some scripts
 
-The above example is simple and works but it has some limitations. Pausing a game that way will pause all the elements that are governed by `Time.time` which is basically *EVERYTHING* in your game except your custom scripts that explicitly use `Time.unscaledTime`. In some situations that is not what we want especially if there are some elements in our game that we want to keep animating even if the main gameplay is paused. For example:
+The above example is simple and it works but has some limitations. Pausing a game that way will pause all the elements that are governed by `Time.time` which is basically *EVERYTHING* in your game except your custom scripts that explicitly use `Time.unscaledTime`. In some situations, this is not what we want especially if there are some elements in our game that we want to keep active even if the main gameplay is paused. For example:
 * animated game menus or other effects that are visible only when the game is paused
-* a tactical view of a strategy game where all the units are paused but you can still move camera or issue commands
+* a tactical view of a strategy game where all the units are paused but you can still move the camera or issue commands
 
-Since we can't use `Time.timeScale` directly we need to wrap the game clock into our own class that we will use selectively in the parts of code that we want to stop.
+Since we can't use `Time.timeScale` directly we need to wrap the game clock into our own class that we will use selectively in the parts of the code that we want to be "pausable":
 
 ```
 using System;
@@ -190,16 +188,16 @@ public class PausableTime
 }
 ```
 
-A lot of code but the idea is pretty simple here. The class is similar to the `PauseManager` in a sense that it exposes `Pause()` and `Resume()` methods and also keeps pause state in `IsPaused` property. Additionally it exposes `Time` and `UnscaledTime` which mimic `Time.time` and `Time.unscaledTime` field, however `PausableTime` does not depend on `Time.timeScale` but implements the logic of stopping the clock itself. The goal here is to be able to stop the clock without changing `Time.timeScale`. Algorithm used is very simple:
+A lot of code but the idea is pretty simple here. The class is similar to the `PauseManager` in a sense that it exposes `Pause()` and `Resume()` methods and also keeps pause state in `IsPaused` property. Additionally it exposes `Time` and `UnscaledTime` which mimic `Time.time` and `Time.unscaledTime` fields, however `PausableTime` does not depend on `Time.timeScale` but it implements the logic of stopping the clock itself. The goal here is to be able to stop the clock without changing `Time.timeScale`. The algorithm used is very simple:
 
 1. On `Pause()` the class stores the current value of `Time` to a private field `pauseTime`.
-2. On `Resume()` the class stores the amount of time for how long the clock was stopped in  private field `gapTime`.
-3. When we want to read the value of `Time` we will do it differently depending on whether the time is paused or not:
+2. On `Resume()` the class stores the amount of time for how long the clock was stopped in private field `gapTime`.
+3. When we want to read the value of `Time` we will do it differently depending on whether the clock is paused or not:
     1. If the clock `IsPaused` then we only need to return `pauseTime` since we conveniently saved the value of clock when pause occurred.
-    2. If the clock is not paused we can't just return the value of `Time.time`, we have to subtract the length of the last pause (`gapTime`) from the system clock to avoid the value of `Time` skipping forward when we resume.
-4. When we want to read the value of `DeltaTime` the algorithm is much simpler than time, we only need to return `0.0f` if the clock is paused because no time should have elapsed since the last frame, or `Time.deltaTime` is the game is not paused.
+    2. If the clock is not paused we can't just return the value of `Time.time`, because the value would skip forward on `Resume()`. We want to keep the clock value behind the system clock which was still running. To do that we have to subtract the length of the last pause (`gapTime`) from the system clock.
+4. When we want to read the value of `DeltaTime` the algorithm is much simpler than for `Time`. We only need to return `0.0f` if the clock is paused because no time elapsed since the last frame, or `Time.deltaTime` if the game is not paused.
 
-Additionally the class is already implemented as singleton because it probably will be accessed by many scripts in our code.
+Additionally, the class is already implemented as a singleton because it will be accessed by many scripts in our code and they all have to be affected by `Pause()` and `Resume()`.
 
 Having our new `PausableTime` class we have to connect it to our Pause button. For that we need to reimplement `PauseButtonHandler`:
 
@@ -305,11 +303,11 @@ public class PausableSwing : MonoBehaviour {
 }
 ```
 
-The above script uses a `Mathf.Sin()` function to oscillate a value between `1.0f` and `-1.0f`. By injecting `PausableTime.Instance.Time` to it's parameter we are able to stop that motion.
+The above script uses a `Mathf.Sin()` function to oscillate a value between `1.0f` and `-1.0f`. By injecting `PausableTime.Instance.Time` to its parameter we are able to stop that motion on demand.
 
 ## Summary
 
-You can use the above method of mixing `UnityEngine.Time` and `PausableTime` to create time dependent scripts that can be paused without having to stop the entire game. You could try to implement your scripts in a way that depending on some public boolean field they will either be pausable or not.
+You can use the above method of mixing `UnityEngine.Time` and `PausableTime` to create time-dependent scripts that can be paused without having to stop the entire game. You could try to implement your scripts in a way that depending on some public boolean field they will either be pausable or not so that you can easily change that behavior in the editor instead of replacing components on an object.
 
 ## Further challenges
 
